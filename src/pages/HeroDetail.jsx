@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { ArrowLeft, Shield, Sparkles, Gauge, BadgeCheck } from "lucide-react";
 import api from "../services/api";
+import "./HeroDetail.css";
 
 function HeroDetail() {
     const { id } = useParams();
@@ -37,56 +39,118 @@ function HeroDetail() {
     };
 
     if (loading) {
-        return <p>Cargando superhéroe...</p>;
+        return (
+            <main className="dashboard-page loading-page">
+                <div className="loader"></div>
+                <p>Cargando superhéroe...</p>
+            </main>
+        );
     }
 
     if (error) {
         return (
-            <div>
-                <h2>Error</h2>
-                <p>{error}</p>
-
-                <Link to="/heroes">
-                    Volver a héroes
-                </Link>
-            </div>
+            <main className="dashboard-page">
+                <div className="error-box">
+                    <h2>Algo salió mal</h2>
+                    <p>{error}</p>
+                    <Link to="/heroes" className="back-link">
+                        Volver a héroes
+                    </Link>
+                </div>
+            </main>
         );
     }
 
     return (
-        <div>
-            <Link to="/heroes">
-                ← Volver a héroes
-            </Link>
+        <main className="dashboard-page hero-detail-page">
+            <header className="dashboard-header hero-detail-header">
+                <div>
+                    <span className="dashboard-label">MARVEL FILE</span>
+                    <h1>{hero.nombre}</h1>
+                    <p>
+                        Ficha del agente especial del sistema.
+                    </p>
+                </div>
 
-            <h1>{hero.nombre}</h1>
+                <Link to="/heroes" className="back-button">
+                    <ArrowLeft size={16} />
+                    Volver a héroes
+                </Link>
+            </header>
 
-            <img
-                src={hero.imagen_url}
-                alt={hero.nombre}
-                width="300"
-            />
+            <section className="detail-layout">
+                <div className="detail-card hero-visual-card">
+                    <div className="hero-image-frame">
+                        <img
+                            src={hero.imagen_url}
+                            alt={hero.nombre}
+                        />
+                    </div>
+                </div>
 
-            <p>
-                <strong>Nombre real:</strong>{" "}
-                {hero.nombre_real}
-            </p>
+                <div className="detail-card hero-info-card">
+                    <div className="info-topline">
+                        <span className="chart-tag">IDENTIDAD</span>
+                        <span className={`status-badge ${hero.estado?.toLowerCase()}`}>
+                            {hero.estado}
+                        </span>
+                    </div>
 
-            <p>
-                <strong>Poder principal:</strong>{" "}
-                {hero.poder_principal}
-            </p>
+                    <h2>{hero.nombre}</h2>
 
-            <p>
-                <strong>Nivel de poder:</strong>{" "}
-                {hero.nivel_poder}
-            </p>
+                    <div className="hero-summary">
+                        <p>
+                            <strong>Nombre real:</strong> {hero.nombre_real}
+                        </p>
+                        <p>
+                            <strong>Poder principal:</strong> {hero.poder_principal}
+                        </p>
+                    </div>
 
-            <p>
-                <strong>Estado:</strong>{" "}
-                {hero.estado}
-            </p>
-        </div>
+                    <div className="stats-grid hero-stats-grid">
+                        <div className="stat-card hero-stat-card">
+                            <div className="stat-icon red">
+                                <Shield size={22} />
+                            </div>
+                            <div>
+                                <span>Nombre real</span>
+                                <strong>{hero.nombre_real}</strong>
+                            </div>
+                        </div>
+
+                        <div className="stat-card hero-stat-card">
+                            <div className="stat-icon blue">
+                                <Sparkles size={22} />
+                            </div>
+                            <div>
+                                <span>Poder</span>
+                                <strong>{hero.poder_principal}</strong>
+                            </div>
+                        </div>
+
+                        <div className="stat-card hero-stat-card">
+                            <div className="stat-icon yellow">
+                                <Gauge size={22} />
+                            </div>
+                            <div>
+                                <span>Nivel</span>
+                                <strong>{hero.nivel_poder}</strong>
+                            </div>
+                        </div>
+
+                        <div className="stat-card hero-stat-card">
+                            <div className="stat-icon green">
+                                <BadgeCheck size={22} />
+                            </div>
+                            <div>
+                                <span>Estado</span>
+                                <strong>{hero.estado}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     );
 }
 

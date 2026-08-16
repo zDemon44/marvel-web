@@ -1,11 +1,29 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+    Search,
+    Plus,
+    Pencil,
+    Trash2,
+    MapPin,
+    CalendarDays,
+    Shield,
+    AlertTriangle,
+    RefreshCw,
+    Target,
+} from "lucide-react";
+
 import api from "../services/api";
+import "./Misiones.css";
 
 function Misiones() {
     const [misiones, setMisiones] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [search, setSearch] = useState("");
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const esAdmin = user?.rol === "ADMIN";
 
     useEffect(() => {
         cargarMisiones();
@@ -32,9 +50,9 @@ function Misiones() {
         }
     };
 
-    const eliminarMision = async (id) => {
+    const eliminarMision = async (id, titulo) => {
         const confirmar = window.confirm(
-            "¿Estás seguro de que deseas eliminar esta misión?"
+            `¿Estás seguro de que deseas eliminar la misión "${titulo}"?`
         );
 
         if (!confirmar) {
@@ -45,7 +63,9 @@ function Misiones() {
             await api.delete(`/misiones/${id}`);
 
             setMisiones((misionesActuales) =>
-                misionesActuales.filter((mision) => mision.id !== id)
+                misionesActuales.filter(
+                    (mision) => mision.id !== id
+                )
             );
         } catch (error) {
             console.error(error);
@@ -58,93 +78,405 @@ function Misiones() {
         }
     };
 
+    const misionesFiltradas = misiones.filter((mision) =>
+        mision.titulo
+            .toLowerCase()
+            .includes(search.toLowerCase())
+    );
+
+    const obtenerClaseEstado = (estado) => {
+        switch (estado) {
+            case "COMPLETADA":
+                return "completada";
+
+            case "EN_PROGRESO":
+                return "en_progreso";
+
+            case "PENDIENTE":
+                return "pendiente";
+
+            default:
+                return "";
+        }
+    };
+
+    const obtenerClasePeligro = (nivel) => {
+        switch (nivel) {
+            case "ALTO":
+                return "alto";
+
+            case "MEDIO":
+                return "medio";
+
+            case "BAJO":
+                return "bajo";
+
+            default:
+                return "";
+        }
+    };
+
+    const formatearEstado = (estado) => {
+        if (estado === "EN_PROGRESO") {
+            return "EN PROGRESO";
+        }
+
+        return estado;
+    };
+
+    const formatearFecha = (fecha) => {
+        if (!fecha) {
+            return "Sin fecha";
+        }
+
+        const partes = fecha.split("-");
+
+        if (partes.length === 3) {
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        return fecha;
+    };
+
     if (loading) {
-        return <p>Cargando misiones...</p>;
+        return (
+            <main className="misiones-page misiones-loading">
+                <div className="misiones-loader"></div>
+
+                <p>Cargando misiones...</p>
+            </main>
+        );
     }
 
     if (error) {
         return (
-            <div>
-                <h2>Error</h2>
-                <p>{error}</p>
+            <main className="misiones-page">
+                <div className="misiones-error">
 
-                <button onClick={cargarMisiones}>
-                    Reintentar
-                </button>
-            </div>
+                    <div className="misiones-error-icon">
+                        <Shield size={32} />
+                    </div>
+
+                    <span className="misiones-tag">
+                        ERROR
+                    </span>
+
+                    <h2>
+                        No pudimos cargar las misiones
+                    </h2>
+
+                    <p>{error}</p>
+
+                    <button onClick={cargarMisiones}>
+                        <RefreshCw size={17} />
+                        Reintentar
+                    </button>
+
+                </div>
+            </main>
         );
     }
 
     return (
-        <div>
-            <h1>Misiones</h1>
+        <main className="misiones-page">
 
-            <Link to="/misiones/nueva">
-                Nueva misión
-            </Link>
+            {/* HEADER */}
 
-            <br />
-            <br />
+            <header className="misiones-header">
 
-            {misiones.length === 0 ? (
-                <p>No hay misiones registradas.</p>
-            ) : (
                 <div>
-                    {misiones.map((mision) => (
-                        <div key={mision.id}>
-                            <h2>{mision.titulo}</h2>
 
-                            <p>
-                                <strong>Descripción:</strong>{" "}
-                                {mision.descripcion}
-                            </p>
+                    <span className="misiones-label">
+                        MARVEL MANAGER
+                    </span>
 
-                            <p>
-                                <strong>Ubicación:</strong>{" "}
-                                {mision.ubicacion}
-                            </p>
+                    <h1>Misiones</h1>
 
-                            <p>
-                                <strong>Fecha:</strong>{" "}
-                                {mision.fecha}
-                            </p>
+                    <p>
+                        Administra las misiones asignadas a los
+                        superhéroes.
+                    </p>
 
-                            <p>
-                                <strong>Nivel de peligro:</strong>{" "}
-                                {mision.nivel_peligro}
-                            </p>
-
-                            <p>
-                                <strong>Estado:</strong>{" "}
-                                {mision.estado}
-                            </p>
-
-                            <p>
-                                <strong>Superhéroe:</strong>{" "}
-                                {mision.heroe?.nombre ||
-                                    `ID ${mision.superheroe_id}`}
-                            </p>
-
-                            <Link to={`/misiones/editar/${mision.id}`}>
-                                Editar
-                            </Link>
-
-                            {" | "}
-
-                            <button
-                                onClick={() =>
-                                    eliminarMision(mision.id)
-                                }
-                            >
-                                Eliminar
-                            </button>
-
-                            <hr />
-                        </div>
-                    ))}
                 </div>
+
+                {esAdmin && (
+                    <Link
+                        to="/misiones/nueva"
+                        className="new-mission-button"
+                    >
+                        <Plus size={19} />
+                        Nueva misión
+                    </Link>
+                )}
+
+            </header>
+
+
+            {/* TOOLBAR */}
+
+            <section className="misiones-toolbar">
+
+                <div className="misiones-search">
+
+                    <Search size={19} />
+
+                    <input
+                        type="text"
+                        placeholder="Buscar misión por título..."
+                        value={search}
+                        onChange={(e) =>
+                            setSearch(e.target.value)
+                        }
+                    />
+
+                    {search && (
+                        <button
+                            className="clear-mission-search"
+                            onClick={() => setSearch("")}
+                        >
+                            ×
+                        </button>
+                    )}
+
+                </div>
+
+                <div className="misiones-counter">
+
+                    <strong>
+                        {misionesFiltradas.length}
+                    </strong>
+
+                    <span>
+                        {misionesFiltradas.length === 1
+                            ? " MISIÓN"
+                            : " MISIONES"}
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            {/* SIN RESULTADOS */}
+
+            {misionesFiltradas.length === 0 ? (
+
+                <section className="misiones-empty">
+
+                    <div className="mission-empty-icon">
+                        <Target size={34} />
+                    </div>
+
+                    <span className="misiones-tag">
+                        SIN RESULTADOS
+                    </span>
+
+                    <h2>
+                        No encontramos misiones
+                    </h2>
+
+                    <p>
+                        {search
+                            ? `No hay misiones que coincidan con "${search}".`
+                            : "Todavía no hay misiones registradas."}
+                    </p>
+
+                    {search && (
+                        <button
+                            onClick={() => setSearch("")}
+                            className="empty-mission-button"
+                        >
+                            Limpiar búsqueda
+                        </button>
+                    )}
+
+                </section>
+
+            ) : (
+
+                /* GRID DE MISIONES */
+
+                <section className="misiones-grid">
+
+                    {misionesFiltradas.map((mision) => (
+
+                        <article
+                            className="mission-card"
+                            key={mision.id}
+                        >
+
+                            {/* CABECERA */}
+
+                            <div className="mission-card-header">
+
+                                <div className="mission-number">
+                                    MISSION #
+                                    {String(mision.id).padStart(
+                                        2,
+                                        "0"
+                                    )}
+                                </div>
+
+                                <span
+                                    className={`mission-status ${
+                                        obtenerClaseEstado(
+                                            mision.estado
+                                        )
+                                    }`}
+                                >
+                                    {formatearEstado(
+                                        mision.estado
+                                    )}
+                                </span>
+
+                            </div>
+
+
+                            {/* CONTENIDO */}
+
+                            <div className="mission-content">
+
+                                <span className="mission-type">
+                                    OPERACIÓN MARVEL
+                                </span>
+
+                                <h2>
+                                    {mision.titulo}
+                                </h2>
+
+                                <p className="mission-description">
+                                    {mision.descripcion}
+                                </p>
+
+
+                                {/* DATOS */}
+
+                                <div className="mission-data">
+
+                                    <div className="mission-data-item">
+
+                                        <MapPin size={17} />
+
+                                        <div>
+                                            <span>
+                                                UBICACIÓN
+                                            </span>
+
+                                            <strong>
+                                                {mision.ubicacion}
+                                            </strong>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div className="mission-data-item">
+
+                                        <CalendarDays size={17} />
+
+                                        <div>
+                                            <span>
+                                                FECHA
+                                            </span>
+
+                                            <strong>
+                                                {formatearFecha(
+                                                    mision.fecha
+                                                )}
+                                            </strong>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                {/* HÉROE Y PELIGRO */}
+
+                                <div className="mission-bottom-data">
+
+                                    <div className="assigned-hero">
+
+                                        <Shield size={17} />
+
+                                        <div>
+
+                                            <span>
+                                                SUPERHÉROE ASIGNADO
+                                            </span>
+
+                                            <strong>
+                                                {mision.heroe?.nombre ||
+                                                    `ID ${mision.superheroe_id}`}
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div
+                                        className={`danger-level ${
+                                            obtenerClasePeligro(
+                                                mision.nivel_peligro
+                                            )
+                                        }`}
+                                    >
+
+                                        <AlertTriangle size={15} />
+
+                                        <span>
+                                            PELIGRO
+                                        </span>
+
+                                        <strong>
+                                            {mision.nivel_peligro}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            {/* ACCIONES */}
+
+                            {esAdmin && (
+                                <div className="mission-actions">
+
+                                    <Link
+                                        to={`/misiones/editar/${mision.id}`}
+                                        className="mission-action edit"
+                                    >
+                                        <Pencil size={16} />
+                                        Editar misión
+                                    </Link>
+
+                                    <button
+                                        className="mission-action delete"
+                                        onClick={() =>
+                                            eliminarMision(
+                                                mision.id,
+                                                mision.titulo
+                                            )
+                                        }
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+
+                                </div>
+                            )}
+
+                        </article>
+
+                    ))}
+
+                </section>
+
             )}
-        </div>
+
+        </main>
     );
 }
 

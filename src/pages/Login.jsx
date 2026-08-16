@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import "./Login.css";
 
 function Login() {
     const navigate = useNavigate();
@@ -30,6 +31,8 @@ function Login() {
 
             navigate("/");
         } catch (error) {
+            console.error(error);
+
             if (error.response?.data?.message) {
                 setError(error.response.data.message);
             } else {
@@ -41,43 +44,161 @@ function Login() {
     };
 
     return (
-        <div>
-            <h1>Marvel API</h1>
-            <h2>Iniciar sesión</h2>
+        <div className="login-page">
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Email</label>
+            {/* DECORACIÓN */}
+            <div className="login-background">
+                <span className="background-letter">M</span>
+                <span className="background-dot dot-1"></span>
+                <span className="background-dot dot-2"></span>
+                <span className="background-dot dot-3"></span>
+            </div>
 
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
 
-                <div>
-                    <label>Password</label>
+            {/* CONTENEDOR PRINCIPAL */}
+            <div className="login-container">
 
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
+                {/* PANEL IZQUIERDO */}
+                <div className="login-brand">
 
-                {error && (
+                    <div className="brand-logo">
+                        M
+                    </div>
+
+                    <span className="brand-small">
+                        MARVEL
+                    </span>
+
+                    <h1>
+                        MARVEL
+                        <br />
+                        MANAGER
+                    </h1>
+
+                    <div className="brand-line"></div>
+
                     <p>
-                        {error}
+                        Sistema de gestión de
+                        superhéroes y misiones.
                     </p>
-                )}
 
-                <button type="submit" disabled={loading}>
-                    {loading ? "Iniciando sesión..." : "Iniciar sesión"}
-                </button>
-            </form>
+                    <div className="brand-info">
+                        <span>HÉROES</span>
+                        <span>•</span>
+                        <span>MISIONES</span>
+                        <span>•</span>
+                        <span>MARVEL</span>
+                    </div>
+
+                </div>
+
+
+                {/* PANEL LOGIN */}
+                <div className="login-card">
+
+                    <div className="login-header">
+
+                        <span className="login-tag">
+                            ACCESO
+                        </span>
+
+                        <h2>
+                            Iniciar sesión
+                        </h2>
+
+                        <p>
+                            Ingresa tus credenciales para continuar.
+                        </p>
+
+                    </div>
+
+
+                    <form onSubmit={handleSubmit}>
+
+                        {/* EMAIL */}
+                        <div className="login-field">
+
+                            <label htmlFor="email">
+                                Email
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                placeholder="correo@ejemplo.com"
+                                value={email}
+                                onChange={(e) =>
+                                    setEmail(e.target.value)
+                                }
+                                required
+                                autoComplete="email"
+                            />
+
+                        </div>
+
+
+                        {/* PASSWORD */}
+                        <div className="login-field">
+
+                            <label htmlFor="password">
+                                Password
+                            </label>
+
+                            <input
+                                id="password"
+                                type="password"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) =>
+                                    setPassword(e.target.value)
+                                }
+                                required
+                                autoComplete="current-password"
+                            />
+
+                        </div>
+
+
+                        {/* ERROR */}
+                        {error && (
+                            <div className="login-error">
+                                <strong>⚠ Error</strong>
+
+                                <span>
+                                    {error}
+                                </span>
+                            </div>
+                        )}
+
+
+                        {/* BOTÓN */}
+                        <button
+                            type="submit"
+                            className="login-button"
+                            disabled={loading}
+                        >
+                            {loading
+                                ? "AUTENTICANDO..."
+                                : "INICIAR SESIÓN →"}
+                        </button>
+
+                    </form>
+
+
+                    <div className="login-footer">
+                        <span>
+                            MARVEL MANAGER
+                        </span>
+
+                        <span>
+                            API REST • JWT
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
     );
 }

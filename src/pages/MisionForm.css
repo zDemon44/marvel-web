@@ -1,0 +1,552 @@
+.mision-form-page {
+    --mm-ink: #0b0b0d;
+    --mm-ink-soft: #6b6b72;
+    --mm-paper: #f3f1ec;
+    --mm-panel: #ffffff;
+    --mm-red: #e62429;
+    --mm-red-soft: #fff0f0;
+    --mm-blue: #2f5fa8;
+    --mm-border: #17171b;
+
+    margin-left: var(--sidebar-width, 250px);
+
+    min-height: 100vh;
+
+    padding: 35px 40px 60px;
+
+    box-sizing: border-box;
+
+    background: var(--mm-paper);
+    color: var(--mm-ink);
+
+    font-family: 'Inter', sans-serif;
+
+    transition: margin-left 0.25s ease;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.mision-form-header {
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: space-between;
+
+    margin-bottom: 35px;
+}
+
+.mision-form-label {
+    display: inline-block;
+
+    background: var(--mm-ink);
+    color: white;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    padding: 5px 11px;
+
+    transform: skew(-8deg);
+}
+
+.mision-form-header h1 {
+    margin: 13px 0 7px;
+
+    font-family: 'Anton', sans-serif;
+
+    font-size: 42px;
+    font-weight: 400;
+
+    text-transform: uppercase;
+
+    line-height: 0.95;
+}
+
+.mision-form-header p {
+    margin: 0;
+
+    color: var(--mm-ink-soft);
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   BOTÓN VOLVER
+========================= */
+
+.btn-back {
+    border: 2px solid var(--mm-border);
+
+    background: white;
+
+    color: var(--mm-ink);
+
+    padding: 11px 18px;
+
+    border-radius: 6px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow: 4px 4px 0 var(--mm-border);
+
+    transition: 0.15s ease;
+}
+
+.btn-back:hover {
+    transform: translate(-2px, -2px);
+
+    box-shadow: 6px 6px 0 var(--mm-border);
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.mision-form-card {
+    max-width: 1050px;
+
+    margin: 0 auto;
+
+    background: var(--mm-panel);
+
+    border: 2px solid var(--mm-border);
+
+    border-radius: 8px;
+
+    box-shadow: 6px 6px 0 var(--mm-border);
+
+    padding: 32px;
+}
+
+
+/* =========================
+   CARD HEADER
+========================= */
+
+.form-card-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding-bottom: 25px;
+
+    margin-bottom: 28px;
+
+    border-bottom: 2px dashed #ddd;
+}
+
+.form-tag {
+    display: inline-block;
+
+    background: var(--mm-ink);
+
+    color: white;
+
+    padding: 4px 9px;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+
+    transform: skew(-8deg);
+}
+
+.form-card-header h2 {
+    margin: 10px 0 4px;
+
+    font-family: 'Anton', sans-serif;
+
+    font-size: 23px;
+
+    font-weight: 400;
+
+    text-transform: uppercase;
+}
+
+.form-card-header p {
+    margin: 0;
+
+    color: var(--mm-ink-soft);
+
+    font-size: 13px;
+}
+
+.mission-symbol {
+    width: 60px;
+    height: 60px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid var(--mm-border);
+
+    border-radius: 8px;
+
+    background: var(--mm-red-soft);
+
+    color: var(--mm-red);
+
+    font-size: 30px;
+
+    box-shadow: 3px 3px 0 var(--mm-border);
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+form {
+    width: 100%;
+}
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 22px;
+
+    margin-bottom: 22px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 22px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 12px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 2px solid #cfcfd3;
+
+    border-radius: 6px;
+
+    background: #fafafa;
+
+    color: var(--mm-ink);
+
+    padding: 12px 14px;
+
+    font-family: 'Inter', sans-serif;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+}
+
+.form-group textarea {
+    resize: vertical;
+
+    min-height: 120px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--mm-red);
+
+    background: white;
+
+    box-shadow: 3px 3px 0 rgba(230, 36, 41, 0.15);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #a1a1a6;
+}
+
+
+/* =========================
+   SELECT
+========================= */
+
+.form-group select {
+    cursor: pointer;
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.form-error {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-bottom: 25px;
+
+    padding: 14px 17px;
+
+    background: var(--mm-red-soft);
+
+    border: 2px solid var(--mm-red);
+
+    border-radius: 6px;
+
+    color: #9d1519;
+
+    font-size: 13px;
+}
+
+.form-error strong {
+    font-weight: 800;
+}
+
+.form-error span {
+    line-height: 1.5;
+}
+
+
+/* =========================
+   WARNING
+========================= */
+
+.field-warning {
+    color: #a66b00;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    padding-top: 25px;
+
+    margin-top: 5px;
+
+    border-top: 2px dashed #ddd;
+}
+
+.btn-cancel,
+.btn-save {
+    padding: 12px 22px;
+
+    border-radius: 6px;
+
+    border: 2px solid var(--mm-border);
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.btn-cancel {
+    background: white;
+
+    color: var(--mm-ink);
+
+    box-shadow: 3px 3px 0 var(--mm-border);
+}
+
+.btn-save {
+    background: var(--mm-red);
+
+    color: white;
+
+    box-shadow: 4px 4px 0 var(--mm-border);
+}
+
+.btn-cancel:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+
+    box-shadow: 4px 4px 0 var(--mm-border);
+}
+
+.btn-save:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+
+    box-shadow: 6px 6px 0 var(--mm-border);
+}
+
+.btn-cancel:disabled,
+.btn-save:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.mision-form-page.loading-page {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    margin-left: var(--sidebar-width, 250px);
+
+    min-height: 100vh;
+}
+
+.loading-page p {
+    margin-top: 5px;
+
+    color: var(--mm-ink-soft);
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.loader {
+    width: 34px;
+    height: 34px;
+
+    border: 4px solid #ddd;
+
+    border-top-color: var(--mm-red);
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 850px) {
+
+    .mision-form-page {
+        margin-left: 76px;
+
+        padding: 25px 20px 45px;
+    }
+
+    .mision-form-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 20px;
+    }
+
+    .mision-form-header h1 {
+        font-size: 34px;
+    }
+
+    .mision-form-card {
+        padding: 24px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .form-card-header {
+        align-items: flex-start;
+    }
+
+    .mission-symbol {
+        width: 50px;
+        height: 50px;
+
+        font-size: 24px;
+    }
+}
+
+
+@media (max-width: 550px) {
+
+    .mision-form-page {
+        padding: 20px 15px 35px;
+    }
+
+    .mision-form-card {
+        padding: 20px;
+    }
+
+    .form-card-header {
+        flex-direction: column;
+
+        gap: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn-cancel,
+    .btn-save {
+        width: 100%;
+    }
+}

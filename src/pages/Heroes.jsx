@@ -1,12 +1,27 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+    Search,
+    Plus,
+    Eye,
+    Pencil,
+    Trash2,
+    Shield,
+    Zap,
+    RefreshCw,
+} from "lucide-react";
+
 import api from "../services/api";
+import "./Heroes.css";
 
 function Heroes() {
     const [heroes, setHeroes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [search, setSearch] = useState("");
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const esAdmin = user?.rol === "ADMIN";
 
     useEffect(() => {
         cargarHeroes();
@@ -33,9 +48,9 @@ function Heroes() {
         }
     };
 
-    const eliminarHeroe = async (id) => {
+    const eliminarHeroe = async (id, nombre) => {
         const confirmar = window.confirm(
-            "¿Estás seguro de que deseas eliminar este superhéroe?"
+            `¿Estás seguro de que deseas eliminar a ${nombre}?`
         );
 
         if (!confirmar) {
@@ -64,97 +79,294 @@ function Heroes() {
     );
 
     if (loading) {
-        return <p>Cargando superhéroes...</p>;
+        return (
+            <main className="heroes-page heroes-loading">
+                <div className="heroes-loader"></div>
+
+                <p>Cargando superhéroes...</p>
+            </main>
+        );
     }
 
     if (error) {
         return (
-            <div>
-                <h2>Error</h2>
-                <p>{error}</p>
+            <main className="heroes-page">
+                <div className="heroes-error">
+                    <div className="heroes-error-icon">
+                        <Shield size={32} />
+                    </div>
 
-                <button onClick={cargarHeroes}>
-                    Reintentar
-                </button>
-            </div>
+                    <span className="heroes-tag">ERROR</span>
+
+                    <h2>No pudimos cargar los héroes</h2>
+
+                    <p>{error}</p>
+
+                    <button onClick={cargarHeroes}>
+                        <RefreshCw size={17} />
+                        Reintentar
+                    </button>
+                </div>
+            </main>
         );
     }
 
     return (
-        <div>
-            <h1>Superhéroes</h1>
+        <main className="heroes-page">
 
-            <Link to="/heroes/nuevo">
-                Nuevo superhéroe
-            </Link>
+            {/* HEADER */}
 
-            <br />
-            <br />
+            <header className="heroes-header">
 
-            <input
-                type="text"
-                placeholder="Buscar por nombre..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
+                <div>
+                    <span className="heroes-label">
+                        MARVEL MANAGER
+                    </span>
 
-            <br />
-            <br />
+                    <h1>Superhéroes</h1>
+
+                    <p>
+                        Gestiona los superhéroes registrados en el sistema.
+                    </p>
+                </div>
+
+                {esAdmin && (
+                    <Link
+                        to="/heroes/nuevo"
+                        className="new-hero-button"
+                    >
+                        <Plus size={19} />
+                        Nuevo superhéroe
+                    </Link>
+                )}
+
+            </header>
+
+
+            {/* BUSCADOR */}
+
+            <section className="heroes-toolbar">
+
+                <div className="heroes-search">
+
+                    <Search size={19} />
+
+                    <input
+                        type="text"
+                        placeholder="Buscar superhéroe por nombre..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+
+                    {search && (
+                        <button
+                            className="clear-search"
+                            onClick={() => setSearch("")}
+                        >
+                            ×
+                        </button>
+                    )}
+
+                </div>
+
+                <div className="heroes-counter">
+
+                    <strong>
+                        {heroesFiltrados.length}
+                    </strong>
+
+                    <span>
+                        {heroesFiltrados.length === 1
+                            ? " SUPERHÉROE"
+                            : " SUPERHÉROES"}
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            {/* SIN RESULTADOS */}
 
             {heroesFiltrados.length === 0 ? (
-                <p>No se encontraron superhéroes.</p>
+
+                <section className="heroes-empty">
+
+                    <div className="empty-icon">
+                        <Search size={34} />
+                    </div>
+
+                    <span className="heroes-tag">
+                        SIN RESULTADOS
+                    </span>
+
+                    <h2>No encontramos superhéroes</h2>
+
+                    <p>
+                        No hay superhéroes que coincidan con
+                        <strong> "{search}"</strong>.
+                    </p>
+
+                    {search && (
+                        <button
+                            onClick={() => setSearch("")}
+                            className="empty-button"
+                        >
+                            Limpiar búsqueda
+                        </button>
+                    )}
+
+                </section>
+
             ) : (
-                <div>
+
+                /* GRID DE HÉROES */
+
+                <section className="heroes-grid">
+
                     {heroesFiltrados.map((hero) => (
-                        <div key={hero.id}>
 
-                            <img
-                                src={hero.imagen_url}
-                                alt={hero.nombre}
-                                width="150"
-                            />
+                        <article
+                            className="hero-card"
+                            key={hero.id}
+                        >
 
-                            <h2>{hero.nombre}</h2>
+                            {/* IMAGEN */}
 
-                            <p>
-                                <strong>Poder:</strong>{" "}
-                                {hero.poder_principal}
-                            </p>
+                            <div className="hero-image-container">
 
-                            <p>
-                                <strong>Nivel:</strong>{" "}
-                                {hero.nivel_poder}
-                            </p>
+                                <img
+                                    src={hero.imagen_url}
+                                    alt={hero.nombre}
+                                    className="hero-image"
+                                    onError={(e) => {
+                                        e.currentTarget.style.display =
+                                            "none";
+                                        e.currentTarget.parentElement.classList.add(
+                                            "image-error"
+                                        );
+                                    }}
+                                />
 
-                            <p>
-                                <strong>Estado:</strong>{" "}
-                                {hero.estado}
-                            </p>
+                                <div className="hero-image-number">
+                                    #{String(hero.id).padStart(2, "0")}
+                                </div>
 
-                            <Link to={`/heroes/${hero.id}`}>
-                                Ver detalle
-                            </Link>
+                                <span
+                                    className={`hero-status ${
+                                        hero.estado === "ACTIVO"
+                                            ? "activo"
+                                            : "inactivo"
+                                    }`}
+                                >
+                                    {hero.estado}
+                                </span>
 
-                            {" | "}
+                            </div>
 
-                            <Link to={`/heroes/editar/${hero.id}`}>
-                                Editar
-                            </Link>
 
-                            {" | "}
+                            {/* INFORMACIÓN */}
 
-                            <button
-                                onClick={() => eliminarHeroe(hero.id)}
-                            >
-                                Eliminar
-                            </button>
+                            <div className="hero-content">
 
-                            <hr />
-                        </div>
+                                <span className="hero-type">
+                                    SUPERHÉROE
+                                </span>
+
+                                <h2>
+                                    {hero.nombre}
+                                </h2>
+
+                                <div className="hero-power">
+
+                                    <Zap size={16} />
+
+                                    <span>
+                                        {hero.poder_principal}
+                                    </span>
+
+                                </div>
+
+
+                                {/* NIVEL */}
+
+                                <div className="power-level">
+
+                                    <div className="power-level-header">
+
+                                        <span>
+                                            NIVEL DE PODER
+                                        </span>
+
+                                        <strong>
+                                            {hero.nivel_poder}/100
+                                        </strong>
+
+                                    </div>
+
+                                    <div className="power-bar">
+
+                                        <div
+                                            className="power-bar-fill"
+                                            style={{
+                                                width: `${hero.nivel_poder}%`,
+                                            }}
+                                        ></div>
+
+                                    </div>
+
+                                </div>
+
+
+                                {/* ACCIONES */}
+
+                                <div className="hero-actions">
+
+                                    <Link
+                                        to={`/heroes/${hero.id}`}
+                                        className="hero-action view"
+                                    >
+                                        <Eye size={16} />
+                                        Ver detalle
+                                    </Link>
+
+                                    {esAdmin && (
+                                        <>
+                                            <Link
+                                                to={`/heroes/editar/${hero.id}`}
+                                                className="hero-action edit"
+                                            >
+                                                <Pencil size={16} />
+                                                Editar
+                                            </Link>
+
+                                            <button
+                                                className="hero-action delete"
+                                                onClick={() =>
+                                                    eliminarHeroe(
+                                                        hero.id,
+                                                        hero.nombre
+                                                    )
+                                                }
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </>
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
                     ))}
-                </div>
+
+                </section>
+
             )}
-        </div>
+
+        </main>
     );
 }
 

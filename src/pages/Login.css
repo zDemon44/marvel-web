@@ -1,0 +1,645 @@
+/* ========================================
+   MARVEL MANAGER - LOGIN
+======================================== */
+
+.login-page {
+    --mm-ink: #0b0b0d;
+    --mm-ink-soft: #77777e;
+    --mm-paper: #f3f1ec;
+    --mm-panel: #ffffff;
+    --mm-red: #e62429;
+    --mm-red-dark: #bd171b;
+    --mm-red-soft: #fff0f0;
+    --mm-border: #17171b;
+
+    min-height: 100vh;
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding: 35px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(230, 36, 41, 0.08),
+            transparent 30%
+        ),
+        var(--mm-paper);
+
+    font-family: 'Inter', sans-serif;
+
+    color: var(--mm-ink);
+}
+
+
+/* ========================================
+   BACKGROUND
+======================================== */
+
+.login-background {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    overflow: hidden;
+}
+
+.background-letter {
+    position: absolute;
+
+    right: -70px;
+    bottom: -170px;
+
+    font-family: 'Anton', sans-serif;
+
+    font-size: 520px;
+
+    line-height: 1;
+
+    color: rgba(11, 11, 13, 0.035);
+
+    user-select: none;
+}
+
+.background-dot {
+    position: absolute;
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: var(--mm-red);
+
+    opacity: 0.8;
+}
+
+.dot-1 {
+    top: 12%;
+    left: 8%;
+}
+
+.dot-2 {
+    top: 82%;
+    left: 18%;
+}
+
+.dot-3 {
+    top: 20%;
+    right: 12%;
+}
+
+
+/* ========================================
+   CONTAINER
+======================================== */
+
+.login-container {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    max-width: 1000px;
+
+    min-height: 560px;
+
+    display: grid;
+
+    grid-template-columns: 0.9fr 1.1fr;
+
+    background: var(--mm-panel);
+
+    border: 2px solid var(--mm-border);
+
+    border-radius: 8px;
+
+    box-shadow:
+        10px 10px 0 var(--mm-border);
+
+    overflow: hidden;
+}
+
+
+/* ========================================
+   BRAND PANEL
+======================================== */
+
+.login-brand {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 55px;
+
+    background: var(--mm-ink);
+
+    color: white;
+
+    overflow: hidden;
+}
+
+
+/* Patrón de puntos */
+
+.login-brand::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    opacity: 0.12;
+
+    background-image:
+        radial-gradient(
+            white 1px,
+            transparent 1px
+        );
+
+    background-size: 12px 12px;
+
+    pointer-events: none;
+}
+
+
+/* Logo */
+
+.brand-logo {
+    position: relative;
+
+    z-index: 2;
+
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 25px;
+
+    background: var(--mm-red);
+
+    color: white;
+
+    font-family: 'Anton', sans-serif;
+
+    font-size: 38px;
+
+    font-style: italic;
+
+    transform: skew(-8deg);
+
+    border: 2px solid white;
+
+    box-shadow:
+        5px 5px 0 var(--mm-red);
+}
+
+
+/* Texto Marvel */
+
+.brand-small {
+    position: relative;
+
+    z-index: 2;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 4px;
+
+    color: #aaaab0;
+}
+
+
+/* Título */
+
+.login-brand h1 {
+    position: relative;
+
+    z-index: 2;
+
+    margin: 8px 0 20px;
+
+    font-family: 'Anton', sans-serif;
+
+    font-size: 62px;
+
+    font-weight: 400;
+
+    line-height: 0.9;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+/* Línea */
+
+.brand-line {
+    position: relative;
+
+    z-index: 2;
+
+    width: 75px;
+
+    height: 5px;
+
+    margin-bottom: 20px;
+
+    background: var(--mm-red);
+}
+
+
+/* Descripción */
+
+.login-brand p {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 280px;
+
+    margin: 0;
+
+    color: #b9b9be;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* Info */
+
+.brand-info {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 35px;
+
+    color: #77777e;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+/* ========================================
+   LOGIN CARD
+======================================== */
+
+.login-card {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 55px 65px;
+
+    background: white;
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.login-header {
+    margin-bottom: 35px;
+}
+
+.login-tag {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    background: var(--mm-ink);
+
+    color: white;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    transform: skew(-8deg);
+}
+
+.login-header h2 {
+    margin: 13px 0 7px;
+
+    font-family: 'Anton', sans-serif;
+
+    font-size: 34px;
+
+    font-weight: 400;
+
+    text-transform: uppercase;
+
+    line-height: 1;
+}
+
+.login-header p {
+    margin: 0;
+
+    color: var(--mm-ink-soft);
+
+    font-size: 13px;
+}
+
+
+/* ========================================
+   FORM
+======================================== */
+
+.login-field {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 20px;
+}
+
+.login-field label {
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+    text-transform: uppercase;
+}
+
+.login-field input {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 13px 14px;
+
+    border: 2px solid #d1d1d5;
+
+    border-radius: 5px;
+
+    background: #fafafa;
+
+    color: var(--mm-ink);
+
+    outline: none;
+
+    font-family: 'Inter', sans-serif;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+}
+
+.login-field input:focus {
+    border-color: var(--mm-red);
+
+    background: white;
+
+    box-shadow:
+        3px 3px 0
+        rgba(230, 36, 41, 0.15);
+}
+
+.login-field input::placeholder {
+    color: #aaaab0;
+}
+
+
+/* ========================================
+   ERROR
+======================================== */
+
+.login-error {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    margin: 5px 0 20px;
+
+    padding: 12px 14px;
+
+    border: 2px solid var(--mm-red);
+
+    border-radius: 5px;
+
+    background: var(--mm-red-soft);
+
+    color: #9d1519;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+}
+
+.login-error strong {
+    font-weight: 800;
+}
+
+
+/* ========================================
+   BUTTON
+======================================== */
+
+.login-button {
+    width: 100%;
+
+    padding: 14px 20px;
+
+    margin-top: 5px;
+
+    border: 2px solid var(--mm-border);
+
+    border-radius: 5px;
+
+    background: var(--mm-red);
+
+    color: white;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    box-shadow:
+        4px 4px 0 var(--mm-border);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+}
+
+.login-button:hover:not(:disabled) {
+    background: var(--mm-red-dark);
+
+    transform: translate(-2px, -2px);
+
+    box-shadow:
+        6px 6px 0 var(--mm-border);
+}
+
+.login-button:active:not(:disabled) {
+    transform: translate(2px, 2px);
+
+    box-shadow:
+        2px 2px 0 var(--mm-border);
+}
+
+.login-button:disabled {
+    opacity: 0.65;
+
+    cursor: not-allowed;
+}
+
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.login-footer {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 30px;
+
+    padding-top: 18px;
+
+    border-top: 2px dashed #ddd;
+
+    color: #99999f;
+
+    font-family: 'JetBrains Mono', monospace;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 850px) {
+
+    .login-page {
+        padding: 25px;
+    }
+
+    .login-container {
+        grid-template-columns: 1fr;
+
+        max-width: 500px;
+
+        min-height: auto;
+    }
+
+    .login-brand {
+        padding: 35px;
+
+        min-height: 260px;
+    }
+
+    .login-brand h1 {
+        font-size: 45px;
+    }
+
+    .login-brand p {
+        max-width: 400px;
+    }
+
+    .brand-info {
+        margin-top: 20px;
+    }
+
+    .login-card {
+        padding: 40px;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .login-page {
+        padding: 15px;
+    }
+
+    .login-container {
+        box-shadow: 5px 5px 0 var(--mm-border);
+    }
+
+    .login-brand {
+        padding: 30px;
+    }
+
+    .login-brand h1 {
+        font-size: 38px;
+    }
+
+    .login-card {
+        padding: 30px 25px;
+    }
+
+    .login-footer {
+        flex-direction: column;
+
+        gap: 6px;
+    }
+}

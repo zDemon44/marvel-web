@@ -9,6 +9,7 @@ import {
     Shield,
     Zap,
     RefreshCw,
+    Star,
 } from "lucide-react";
 
 import api from "../services/api";
@@ -19,7 +20,14 @@ function Heroes() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [search, setSearch] = useState("");
+    const [confirmacionHeroe, setConfirmacionHeroe] = useState(null);
+    const [favoritos, setFavoritos] = useState(() => {
+    const favoritosGuardados = localStorage.getItem("favoritos");
 
+        return favoritosGuardados
+            ? JSON.parse(favoritosGuardados)
+            : [];
+    });
     const user = JSON.parse(localStorage.getItem("user"));
     const esAdmin = user?.rol === "ADMIN";
 
@@ -48,21 +56,63 @@ function Heroes() {
         }
     };
 
-    const eliminarHeroe = async (id, nombre) => {
-        const confirmar = window.confirm(
-            `¿Estás seguro de que deseas eliminar a ${nombre}?`
-        );
+    const toggleFavorito = (id) => {
+        setFavoritos((favoritosActuales) => {
+            let nuevosFavoritos;
 
-        if (!confirmar) {
+            if (favoritosActuales.includes(id)) {
+                nuevosFavoritos = favoritosActuales.filter(
+                    (favoritoId) => favoritoId !== id
+                );
+            } else {
+                nuevosFavoritos = [
+                    ...favoritosActuales,
+                    id,
+                ];
+            }
+
+            localStorage.setItem(
+                "favoritos",
+                JSON.stringify(nuevosFavoritos)
+            );
+
+            return nuevosFavoritos;
+        });
+    };
+    
+    const abrirConfirmacionHeroe = async (hero) => {
+        try {
+            const response = await api.get("/misiones");
+            const misionesAsociadas = response.data.data.filter(
+                (mision) => Number(mision.superheroe_id) === Number(hero.id)
+            );
+
+            setConfirmacionHeroe({
+                id: hero.id,
+                nombre: hero.nombre,
+                misionesAsociadas,
+            });
+        } catch (error) {
+            console.error(error);
+            alert("No se pudo verificar las misiones asociadas.");
+        }
+    };
+
+    const confirmarEliminacionHeroe = async () => {
+        if (!confirmacionHeroe) {
             return;
         }
 
         try {
-            await api.delete(`/heroes/${id}`);
+            await api.delete(`/heroes/${confirmacionHeroe.id}`);
 
             setHeroes((heroesActuales) =>
-                heroesActuales.filter((hero) => hero.id !== id)
+                heroesActuales.filter(
+                    (hero) => hero.id !== confirmacionHeroe.id
+                )
             );
+
+            setConfirmacionHeroe(null);
         } catch (error) {
             console.error(error);
 
@@ -248,9 +298,29 @@ function Heroes() {
                                     }}
                                 />
 
-                                <div className="hero-image-number">
-                                    #{String(hero.id).padStart(2, "0")}
-                                </div>
+                                <button
+                                    type="button"
+                                    className={`hero-favorite ${
+                                        favoritos.includes(hero.id)
+                                            ? "favorito"
+                                            : ""
+                                    }`}
+                                    onClick={() => toggleFavorito(hero.id)}
+                                    aria-label={
+                                        favoritos.includes(hero.id)
+                                            ? `Quitar ${hero.nombre} de favoritos`
+                                            : `Agregar ${hero.nombre} a favoritos`
+                                    }
+                                >
+                                    <Star
+                                        size={18}
+                                        fill={
+                                            favoritos.includes(hero.id)
+                                                ? "currentColor"
+                                                : "none"
+                                        }
+                                    />
+                                </button>
 
                                 <span
                                     className={`hero-status ${
@@ -343,10 +413,7 @@ function Heroes() {
                                             <button
                                                 className="hero-action delete"
                                                 onClick={() =>
-                                                    eliminarHeroe(
-                                                        hero.id,
-                                                        hero.nombre
-                                                    )
+                                                    abrirConfirmacionHeroe(hero)
                                                 }
                                             >
                                                 <Trash2 size={16} />
@@ -364,6 +431,52 @@ function Heroes() {
 
                 </section>
 
+            )}
+
+            {confirmacionHeroe && (
+                <div
+                    className="delete-modal-backdrop"
+                    onClick={() => setConfirmacionHeroe(null)}
+                >
+                    <div
+                        className="delete-modal"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <div className="delete-modal-icon">
+                            <Trash2 size={28} />
+                        </div>
+
+                        <span className="heroes-tag delete-modal-tag">
+                            CONFIRMACIÓN
+                        </span>
+
+                        <h3>Eliminar superhéroe</h3>
+
+                        <p>
+                            ¿Estás seguro de que deseas eliminar a{" "}
+                            <strong>{confirmacionHeroe.nombre}</strong>?{" "}
+                            {confirmacionHeroe.misionesAsociadas.length > 0
+                                ? `Esta acción también borrará ${confirmacionHeroe.misionesAsociadas.length} misión(es) asignada(s) a este héroe.`
+                                : "Se eliminará el registro del héroe."}
+                        </p>
+
+                        <div className="delete-modal-actions">
+                            <button
+                                className="modal-cancel-button"
+                                onClick={() => setConfirmacionHeroe(null)}
+                            >
+                                Cancelar
+                            </button>
+
+                            <button
+                                className="modal-confirm-button"
+                                onClick={confirmarEliminacionHeroe}
+                            >
+                                Confirmar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
 
         </main>

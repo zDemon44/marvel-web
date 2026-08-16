@@ -19,6 +19,8 @@ import {
     Target,
     Zap,
     CheckCircle,
+    Star,
+    ArrowRight,
 } from "lucide-react";
 
 import api from "../services/api";
@@ -51,6 +53,7 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    const [favoritos, setFavoritos] = useState([]);
     useEffect(() => {
         cargarDashboard();
     }, []);
@@ -69,6 +72,13 @@ function Home() {
 
             setHeroes(heroesResponse.data.data);
             setMisiones(misionesResponse.data.data);
+
+            const favoritosGuardados = JSON.parse(
+                localStorage.getItem("favoritos") || "[]"
+            );
+
+            setFavoritos(favoritosGuardados);
+
 
         } catch (error) {
 
@@ -145,7 +155,10 @@ function Home() {
         (mision) => mision.estado === "COMPLETADA"
     ).length;
 
-
+    const heroesFavoritos = heroes.filter((hero) =>
+        favoritos.includes(Number(hero.id))
+    );
+    
     if (loading) {
 
         return (
@@ -536,7 +549,118 @@ function Home() {
                 </div>
 
             </section>
+            
+            {/* HÉROES FAVORITOS */}
 
+            <section className="favorites-card">
+
+                <div className="chart-title">
+
+                    <div>
+
+                        <span className="chart-tag">
+                            FAVORITOS
+                        </span>
+
+                        <h2>
+                            Mis héroes favoritos
+                        </h2>
+
+                        <p>
+                            Tus superhéroes guardados
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="/heroes"
+                        className="favorites-link"
+                    >
+                        Ver todos
+                        <ArrowRight size={16} />
+                    </a>
+
+                </div>
+
+
+                {heroesFavoritos.length === 0 ? (
+
+                    <div className="favorites-empty">
+
+                        <Star size={28} />
+
+                        <div>
+                            <strong>
+                                Aún no tienes favoritos
+                            </strong>
+
+                            <span>
+                                Ve a Superhéroes y marca algunos con la estrella.
+                            </span>
+                        </div>
+
+                    </div>
+
+                ) : (
+
+                    <div className="favorites-grid">
+
+                        {heroesFavoritos.map((hero) => (
+
+                            <div
+                                className="favorite-hero"
+                                key={hero.id}
+                            >
+
+                                <img
+                                    src={hero.imagen_url}
+                                    alt={hero.nombre}
+                                    className="favorite-hero-image"
+                                />
+
+                                <div className="favorite-hero-info">
+
+                                    <span>
+                                        SUPERHÉROE
+                                    </span>
+
+                                    <h3>
+                                        {hero.nombre}
+                                    </h3>
+
+                                    <p>
+                                        {hero.poder_principal}
+                                    </p>
+
+                                    <div className="favorite-power">
+
+                                        <span>
+                                            PODER
+                                        </span>
+
+                                        <strong>
+                                            {hero.nivel_poder}/100
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                                <Star
+                                    size={20}
+                                    className="favorite-star"
+                                    fill="currentColor"
+                                />
+
+                            </div>
+
+                        ))}
+
+                    </div>
+
+                )}
+
+            </section>
         </main>
     );
 }

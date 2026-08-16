@@ -21,6 +21,7 @@ function Misiones() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [search, setSearch] = useState("");
+    const [confirmacionMision, setConfirmacionMision] = useState(null);
 
     const user = JSON.parse(localStorage.getItem("user"));
     const esAdmin = user?.rol === "ADMIN";
@@ -50,23 +51,21 @@ function Misiones() {
         }
     };
 
-    const eliminarMision = async (id, titulo) => {
-        const confirmar = window.confirm(
-            `¿Estás seguro de que deseas eliminar la misión "${titulo}"?`
-        );
-
-        if (!confirmar) {
+    const confirmarEliminacionMision = async () => {
+        if (!confirmacionMision) {
             return;
         }
 
         try {
-            await api.delete(`/misiones/${id}`);
+            await api.delete(`/misiones/${confirmacionMision.id}`);
 
             setMisiones((misionesActuales) =>
                 misionesActuales.filter(
-                    (mision) => mision.id !== id
+                    (mision) => mision.id !== confirmacionMision.id
                 )
             );
+
+            setConfirmacionMision(null);
         } catch (error) {
             console.error(error);
 
@@ -458,10 +457,10 @@ function Misiones() {
                                     <button
                                         className="mission-action delete"
                                         onClick={() =>
-                                            eliminarMision(
-                                                mision.id,
-                                                mision.titulo
-                                            )
+                                            setConfirmacionMision({
+                                                id: mision.id,
+                                                titulo: mision.titulo,
+                                            })
                                         }
                                     >
                                         <Trash2 size={16} />
@@ -476,6 +475,49 @@ function Misiones() {
 
                 </section>
 
+            )}
+
+            {confirmacionMision && (
+                <div
+                    className="delete-modal-backdrop"
+                    onClick={() => setConfirmacionMision(null)}
+                >
+                    <div
+                        className="delete-modal"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <div className="delete-modal-icon">
+                            <Trash2 size={28} />
+                        </div>
+
+                        <span className="misiones-tag delete-modal-tag">
+                            CONFIRMACIÓN
+                        </span>
+
+                        <h3>Eliminar misión</h3>
+
+                        <p>
+                            ¿Estás seguro de que deseas eliminar la misión{" "}
+                            <strong>"{confirmacionMision.titulo}"</strong>? Esta acción borrará permanentemente este registro y no se podrá deshacer.
+                        </p>
+
+                        <div className="delete-modal-actions">
+                            <button
+                                className="modal-cancel-button"
+                                onClick={() => setConfirmacionMision(null)}
+                            >
+                                Cancelar
+                            </button>
+
+                            <button
+                                className="modal-confirm-button"
+                                onClick={confirmarEliminacionMision}
+                            >
+                                Confirmar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
 
         </main>

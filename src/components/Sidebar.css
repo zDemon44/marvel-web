@@ -1,8 +1,10 @@
 .sidebar {
+    --mm-red: #e62429;
+
     position: fixed;
     left: 0;
     top: 0;
-    width: 250px;
+    width: var(--sidebar-width, 250px);
     height: 100vh;
 
     background: #0b0b0d;
@@ -18,16 +20,11 @@
     z-index: 1000;
 }
 
-.sidebar.collapsed {
-    width: 76px;
-}
-
 .sidebar-top {
     height: 80px;
 
     display: flex;
     align-items: center;
-    justify-content: space-between;
 
     padding: 0 18px;
 
@@ -36,20 +33,25 @@
 
 .sidebar.collapsed .sidebar-top {
     justify-content: center;
+    padding: 0;
 }
 
 .brand {
     display: flex;
     align-items: center;
     gap: 12px;
+
+    overflow: hidden;
 }
 
 .brand-box {
-    background: #e62429;
+    flex-shrink: 0;
+
+    background: var(--mm-red);
     color: white;
 
-    font-size: 22px;
-    font-weight: 900;
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
 
     padding: 6px 10px;
 
@@ -57,22 +59,50 @@
 }
 
 .brand-text {
-    font-weight: 800;
-    letter-spacing: 1px;
+    font-family: 'Anton', sans-serif;
+    font-size: 19px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
 }
 
-.menu-button {
-    background: transparent;
-    border: none;
-    color: #aaa;
+/* Floating edge toggle — sits on the sidebar's border so it never
+   competes with the logo for space, collapsed or not. */
+.sidebar-toggle {
+    position: absolute;
+    top: 26px;
+    right: -14px;
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--mm-red);
+    color: white;
+
+    border: 2px solid #0b0b0d;
+    border-radius: 50%;
+
+    box-shadow: 3px 3px 0 #0b0b0d;
 
     cursor: pointer;
 
-    padding: 6px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    z-index: 1001;
 }
 
-.menu-button:hover {
-    color: white;
+.sidebar-toggle:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 #0b0b0d;
+}
+
+.sidebar-toggle:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 #0b0b0d;
 }
 
 .sidebar-section {
@@ -84,8 +114,9 @@
 
     color: #666;
 
-    font-size: 11px;
-    font-weight: bold;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
 
     letter-spacing: 1.5px;
 
@@ -107,7 +138,13 @@
 
     border-radius: 8px;
 
+    border: 1px solid transparent;
+
     transition: 0.2s;
+}
+
+.sidebar-link svg {
+    flex-shrink: 0;
 }
 
 .sidebar-link:hover {
@@ -116,8 +153,9 @@
 }
 
 .sidebar-link.active {
-    background: #e62429;
+    background: var(--mm-red);
     color: white;
+    border-color: #ff6a6e;
 }
 
 .sidebar.collapsed .sidebar-link {
@@ -143,10 +181,13 @@
 
     background: #151519;
 
+    border: 1px solid #242428;
     border-radius: 8px;
 }
 
 .user-avatar {
+    flex-shrink: 0;
+
     width: 35px;
     height: 35px;
 
@@ -154,16 +195,25 @@
     align-items: center;
     justify-content: center;
 
-    background: #e62429;
+    background: var(--mm-red);
 
     border-radius: 50%;
 
-    font-weight: bold;
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+}
+
+.sidebar-user > div {
+    min-width: 0;
 }
 
 .sidebar-user strong {
     display: block;
     font-size: 13px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .sidebar-user small {
@@ -172,6 +222,9 @@
     color: #777;
 
     margin-top: 3px;
+
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .logout-button {
@@ -195,6 +248,10 @@
     font-size: 14px;
 }
 
+.logout-button svg {
+    flex-shrink: 0;
+}
+
 .logout-button:hover {
     background: #291416;
     color: #ff5b60;
@@ -202,4 +259,32 @@
 
 .sidebar.collapsed .logout-button {
     justify-content: center;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        width: 76px;
+    }
+
+    .sidebar-top {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .brand-text {
+        display: none;
+    }
+
+    .sidebar-link {
+        justify-content: center;
+    }
+
+    .logout-button {
+        justify-content: center;
+    }
+
 }

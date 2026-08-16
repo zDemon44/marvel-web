@@ -1,14 +1,27 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Shield, Target, LogOut, Menu } from "lucide-react";
-import { useState } from "react";
+import { LayoutDashboard, Shield, Target, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import api from "../services/api";
 import "./Sidebar.css";
+
+const WIDTH_EXPANDED = "250px";
+const WIDTH_COLLAPSED = "76px";
 
 function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const navigate = useNavigate();
 
     const user = JSON.parse(localStorage.getItem("user"));
+
+    // Keep the shared --sidebar-width variable in sync so any page
+    // layout (dashboard-page, etc.) tracks the sidebar's real width
+    // instead of relying on a hardcoded margin.
+    useEffect(() => {
+        document.documentElement.style.setProperty(
+            "--sidebar-width",
+            collapsed ? WIDTH_COLLAPSED : WIDTH_EXPANDED
+        );
+    }, [collapsed]);
 
     const handleLogout = async () => {
         try {
@@ -37,14 +50,15 @@ function Sidebar() {
                     )}
                 </div>
 
-                <button
-                    className="menu-button"
-                    onClick={() => setCollapsed(!collapsed)}
-                >
-                    <Menu size={22} />
-                </button>
-
             </div>
+
+            <button
+                className="sidebar-toggle"
+                onClick={() => setCollapsed(!collapsed)}
+                aria-label={collapsed ? "Expandir menú" : "Colapsar menú"}
+            >
+                {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+            </button>
 
             <div className="sidebar-section">
                 {!collapsed && (

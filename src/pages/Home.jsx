@@ -25,6 +25,22 @@ import api from "../services/api";
 
 import "./Home.css";
 
+const COLOR_INK = "#0b0b0d";
+const COLOR_RED = "#e62429";
+const COLOR_BLUE = "#2f5fa8";
+const COLOR_GOLD = "#c98a00";
+const COLOR_GREEN = "#1f9d55";
+
+const ESTADO_COLORS = [COLOR_GOLD, COLOR_BLUE, COLOR_GREEN];
+
+const tooltipStyle = {
+    border: `2px solid ${COLOR_INK}`,
+    borderRadius: 6,
+    boxShadow: `3px 3px 0 ${COLOR_INK}`,
+    fontFamily: "Inter, sans-serif",
+    fontSize: 12,
+};
+
 function Home() {
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -311,6 +327,10 @@ function Home() {
 
                         <div>
 
+                            <span className="chart-tag">
+                                ASIGNACIÓN
+                            </span>
+
                             <h2>
                                 Misiones por superhéroe
                             </h2>
@@ -337,26 +357,33 @@ function Home() {
                                 <CartesianGrid
                                     strokeDasharray="3 3"
                                     vertical={false}
+                                    stroke="#e4e2dc"
                                 />
 
                                 <XAxis
                                     dataKey="nombre"
                                     axisLine={false}
                                     tickLine={false}
+                                    tick={{ fontSize: 12, fill: COLOR_INK }}
                                 />
 
                                 <YAxis
                                     allowDecimals={false}
                                     axisLine={false}
                                     tickLine={false}
+                                    tick={{ fontSize: 12, fill: COLOR_INK }}
                                 />
 
-                                <Tooltip />
+                                <Tooltip
+                                    contentStyle={tooltipStyle}
+                                    cursor={{ fill: "#f3f1ec" }}
+                                />
 
                                 <Bar
                                     dataKey="misiones"
                                     name="Misiones"
                                     radius={[6, 6, 0, 0]}
+                                    fill={COLOR_RED}
                                 />
 
                             </BarChart>
@@ -375,6 +402,10 @@ function Home() {
                     <div className="chart-title">
 
                         <div>
+
+                            <span className="chart-tag">
+                                ESTADO
+                            </span>
 
                             <h2>
                                 Estado de misiones
@@ -404,22 +435,27 @@ function Home() {
                                     cx="50%"
                                     cy="50%"
                                     outerRadius={110}
+                                    stroke={COLOR_INK}
+                                    strokeWidth={2}
                                     label
                                 >
 
                                     {misionesPorEstado.map(
-                                        (_, index) => (
+                                        (entry, index) => (
                                             <Cell
-                                                key={index}
+                                                key={entry.nombre}
+                                                fill={ESTADO_COLORS[index % ESTADO_COLORS.length]}
                                             />
                                         )
                                     )}
 
                                 </Pie>
 
-                                <Tooltip />
+                                <Tooltip contentStyle={tooltipStyle} />
 
-                                <Legend />
+                                <Legend
+                                    wrapperStyle={{ fontSize: 12 }}
+                                />
 
                             </PieChart>
 
@@ -439,6 +475,10 @@ function Home() {
                 <div className="chart-title">
 
                     <div>
+
+                        <span className="chart-tag">
+                            ACTIVIDAD
+                        </span>
 
                         <h2>
                             Misiones recientes

@@ -129,13 +129,15 @@ function Misiones() {
             return "Sin fecha";
         }
 
-        const partes = fecha.split("-");
+        const fechaLimpia = fecha.split("T")[0];
+
+        const partes = fechaLimpia.split("-");
 
         if (partes.length === 3) {
             return `${partes[2]}/${partes[1]}/${partes[0]}`;
         }
 
-        return fecha;
+        return fechaLimpia;
     };
 
     if (loading) {

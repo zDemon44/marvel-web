@@ -48,7 +48,9 @@ function MisionForm() {
                     titulo: mision.titulo || "",
                     descripcion: mision.descripcion || "",
                     ubicacion: mision.ubicacion || "",
-                    fecha: mision.fecha || "",
+                    fecha: mision.fecha
+                        ? mision.fecha.split("T")[0]
+                        : "",
                     nivel_peligro: mision.nivel_peligro || "BAJO",
                     estado: mision.estado || "PENDIENTE",
                     superheroe_id: mision.superheroe_id || "",

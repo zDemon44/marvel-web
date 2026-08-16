@@ -12,7 +12,7 @@ import HeroDetail from "./pages/HeroDetail";
 import HeroForm from "./pages/HeroForm";
 import Misiones from "./pages/Misiones";
 import MisionForm from "./pages/MisionForm";
-import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
 
 function ProtectedRoute({ children }) {
     const token = localStorage.getItem("token");
@@ -23,7 +23,7 @@ function ProtectedRoute({ children }) {
 
     return (
         <>
-            <Navbar />
+            <Sidebar />
             {children}
         </>
     );
